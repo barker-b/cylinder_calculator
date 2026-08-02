@@ -7,11 +7,12 @@ root.title("button explorer")
 root. geometry("600x600")
 
 # Variables
-
-bore = 4
-rod = 2
-psi = 1000
-flow = 10
+values = {
+    "bore": 4,
+    "rod": 2,
+    "psi": 1000,
+    "flow": 10,
+}
 
 
 # Frames
@@ -31,32 +32,60 @@ flow_frame.pack(pady=20)
 output_frame = ttk.Frame(root)
 output_frame.pack()
 
+# Labels
 
-ttk.Label(bore_frame, text=f"Bore {bore}").pack()
-ttk.Label(rod_frame, text=f"Rod: {rod}").pack()
-ttk.Label(psi_frame, text=f"Pressure: {psi}").pack()
-ttk.Label(flow_frame, text=f"Flow: {flow}").pack()
+labels = {}
 
-output = ttk.Label(output_frame, text="")
+
+labels["bore"] = ttk.Label(
+    bore_frame,
+    text=f"Bore: {values['bore']}",
+    font=("TkDefaultFont", 12)
+)
+
+labels["rod"] = ttk.Label(
+    rod_frame,
+    text=f"Rod: {values['rod']}",
+    font=("TkDefaultFont", 12)
+)
+
+labels["psi"] = ttk.Label(
+    psi_frame,
+    text=f"Pressure: {values['psi']}",
+    font=("TkDefaultFont", 12)
+)
+
+labels["flow"] = ttk.Label(
+    flow_frame,
+    text=f"Flow: {values['flow']}",
+    font=("TkDefaultFont", 12)
+)
+
+labels["bore"].pack()
+labels["rod"].pack()
+labels["psi"].pack()
+labels["flow"].pack()
+
+output = ttk.Label(output_frame, text="", font=("TkDefaultFont", 12))
 output.pack()
 
 # maths 
 def calculate():
 
-    global bore
-    global rod
-    global psi
-    global flow
-
+    bore = values["bore"]
+    rod = values["rod"]
+    psi = values["psi"]
+    flow = values["flow"]
+    
     push, pull = calc.force(psi, bore, rod)
     ext_speed, ret_speed = calc.cyl_speed(flow, bore, rod)
 
     
     outputs = (
-        f"Push force: {push}\n"
-        f"Pull force: {pull}\n"
-        f"Extend speed: {ext_speed}\n"
-        f"Retract speed: {ret_speed}\n"
+        f"Push force: {push:,.0f} pounds.\n"
+        f"Pull force: {pull:,.0f} pounds.\n"
+        f"Extend speed: {ext_speed:.0f} in/min\n"
+        f"Retract speed: {ret_speed:.0f} in/min\n"
     )
 
     output.config(text=outputs)
@@ -64,34 +93,26 @@ def calculate():
 
 calculate()
 
-def button():
-    global bore
-    global rod
-    global psi
-    global flow
-    
-    push, pull = calc.force(psi, bore, rod)
-    ext_speed, ret_speed = calc.cyl_speed(flow, bore, rod)
-    
-    outputs = (
-    f"Push force: {push}\n"
-    f"Pull force: {pull}\n"
-    f"Extend speed: {ext_speed}\n"
-    f"Retract speed: {ret_speed}\n"
-    )
+def button(key, amount):
+        values[key] += amount
+        labels[key].config(text=f"{key.capitalize()}: {values[key]}")
+        if key == 0:
+            key = key
+        calculate()
 
-    output.config(text=outputs)
     
 
-# Buttons
-bore_up = ttk.Button(bore_frame, text="↑", command=button).pack()
-bore_down = ttk.Button(bore_frame, text="↓", command=button).pack()
-rod_up = ttk.Button(rod_frame, text="↑", command=button).pack()
-rod_down = ttk.Button(rod_frame, text="↓", command=button).pack()
-psi_up = ttk.Button(psi_frame, text="↑", command=button).pack()
-psi_down = ttk.Button(psi_frame, text="↓", command=button).pack()
-flow_up = ttk.Button(flow_frame, text="↑", command=button).pack()
-flow_down = ttk.Button(flow_frame, text="↓", command=button).pack()
+ttk.Button(bore_frame, text="↑", command=lambda: button("bore", .5)).pack()
+ttk.Button(bore_frame, text="↓", command=lambda: button("bore", -.5)).pack()
+
+ttk.Button(rod_frame, text="↑", command=lambda: button("rod", .5)).pack()
+ttk.Button(rod_frame, text="↓", command=lambda: button("rod", -.5)).pack()
+
+ttk.Button(psi_frame, text="↑", command=lambda: button("psi", 100)).pack()
+ttk.Button(psi_frame, text="↓", command=lambda: button("psi", -100)).pack()
+
+ttk.Button(flow_frame, text="↑", command=lambda: button("flow", 1)).pack()
+ttk.Button(flow_frame, text="↓", command=lambda: button("flow", -1)).pack()
 
 
 root.mainloop()
