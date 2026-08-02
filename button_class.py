@@ -4,12 +4,7 @@ from tkinter import ttk
 class Button(ttk.Button):
     def __init__(self, frame, key, amount, values, labels, calculate):
         """
-        frame: parent frame
-        key: 'bore', 'rod', 'psi', 'flow'
-        amount: how much to change the value
-        values: your shared values dict
-        labels: your shared labels dict
-        calculate: your calculate() function
+        A class for adjusting parameters using buttons
         """
 
         symbol = "↑" if amount > 0 else "↓"
@@ -27,6 +22,20 @@ class Button(ttk.Button):
 
     def on_click(self):
         new_value = self.values[self.key] + self.amount
+
+
+        # Don't let values go below zero.
+        if new_value < 0:
+            new_value = 0
+
+        # Don't let rod be greater than bore.
+        if self.key == "rod" and new_value >= self.values["bore"]:
+            new_value = self.values["bore"] - 0.25
+
+        # Don't let bore be smaller than rod.
+        if self.key == "bore" and new_value <= self.values["rod"]:
+            new_value = self.values["rod"] + 0.5
+
 
         self.values[self.key] = new_value
 

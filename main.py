@@ -82,6 +82,7 @@ def calculate():
     ext_speed, ret_speed = calc.cyl_speed(flow, bore, rod)
 
     
+          
     outputs = (
         f"Push force: {push:,.0f} pounds.\n"
         f"Pull force: {pull:,.0f} pounds.\n"
@@ -89,7 +90,16 @@ def calculate():
         f"Retract speed: {ret_speed:.0f} in/min\n"
     )
 
-    output.config(text=outputs)
+    outputs_1 = (
+            f"Push force: {push:,.0f} pounds.\n"
+            "Pull force: N/A.\n"
+            f"Extend speed: {ext_speed:.0f} in/min\n"
+            f"Retract speed: {ret_speed:.0f} in/min\n"
+        )
+    if rod == 0:
+        output.config(text=outputs_1)
+    else:   
+        output.config(text=outputs)
     
 
 calculate()
