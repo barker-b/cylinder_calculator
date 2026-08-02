@@ -1,10 +1,11 @@
 import tkinter as tk
 from tkinter import ttk
 import calculator as calc
+from button_class import Button
 
 root = tk.Tk()
-root.title("button explorer")
-root. geometry("600x600")
+root.title("Cylinder Calculator")
+root.geometry("600x600")
 
 # Variables
 values = {
@@ -96,23 +97,21 @@ calculate()
 def button(key, amount):
         values[key] += amount
         labels[key].config(text=f"{key.capitalize()}: {values[key]}")
-        if key == 0:
-            key = key
         calculate()
 
     
 
-ttk.Button(bore_frame, text="↑", command=lambda: button("bore", .5)).pack()
-ttk.Button(bore_frame, text="↓", command=lambda: button("bore", -.5)).pack()
+Button(bore_frame, "bore", +0.5, values, labels, calculate)
+Button(bore_frame, "bore", -0.5, values, labels, calculate)
 
-ttk.Button(rod_frame, text="↑", command=lambda: button("rod", .5)).pack()
-ttk.Button(rod_frame, text="↓", command=lambda: button("rod", -.5)).pack()
+Button(rod_frame, "rod", +0.25, values, labels, calculate)
+Button(rod_frame, "rod", -0.25, values, labels, calculate)
 
-ttk.Button(psi_frame, text="↑", command=lambda: button("psi", 100)).pack()
-ttk.Button(psi_frame, text="↓", command=lambda: button("psi", -100)).pack()
+Button(psi_frame, "psi", +100, values, labels, calculate)
+Button(psi_frame, "psi", -100, values, labels, calculate)
 
-ttk.Button(flow_frame, text="↑", command=lambda: button("flow", 1)).pack()
-ttk.Button(flow_frame, text="↓", command=lambda: button("flow", -1)).pack()
+Button(flow_frame,"flow", +1, values, labels, calculate)
+Button(flow_frame,"flow", -1, values, labels, calculate)
 
 
 root.mainloop()
